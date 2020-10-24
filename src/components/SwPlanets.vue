@@ -111,6 +111,8 @@ export default {
         this.planets.items.push(...apiResponse.data.results);
         this.planets.isMore = apiResponse.data.next;
         this.planets.total = apiResponse.data.count;
+      } catch (error) {
+        this.pagination -= 1;
       } finally {
         this.tableIsLoading = false;
       }
