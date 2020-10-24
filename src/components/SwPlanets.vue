@@ -15,8 +15,10 @@
           variant="success"
           @click="getPlanets"
           :disabled="!planets.isMore"
-          >Get 10 more planets</b-button
         >
+          Get 10 more planets
+          <b-spinner v-if="tableIsLoading" small class="ml-2" />
+        </b-button>
       </div>
     </div>
     <div class="table-wrapper position-relative">
