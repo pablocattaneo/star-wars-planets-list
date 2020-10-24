@@ -11,6 +11,11 @@
               variant="success"
               @click="getPlanets"
               :disabled="tableIsLoading || !planets.isMore"
+              :title="
+                planets.isMore === null
+                  ? 'There is no more data to retrieve'
+                  : null
+              "
             >
               Get 10 more planets
             </b-button>
