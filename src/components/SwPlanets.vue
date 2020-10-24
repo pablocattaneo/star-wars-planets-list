@@ -112,6 +112,13 @@ export default {
         this.planets.isMore = apiResponse.data.next;
         this.planets.total = apiResponse.data.count;
       } catch (error) {
+        const errorMessage = error?.message || "Something go wrong";
+        this.$bvToast.toast(errorMessage, {
+          title: "Error",
+          toaster: "b-toaster-bottom-center",
+          variant: "danger",
+          solid: true
+        });
         this.pagination -= 1;
       } finally {
         this.tableIsLoading = false;
