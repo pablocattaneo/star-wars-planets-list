@@ -1,68 +1,82 @@
 <template>
-  <div id="sw-planets">
-    <div class="row">
-      <div class="col-12 mt-5">
-        <h1 class="text-center">Star Wars Planets</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <p>
-          Screen is showing: {{ planets.items.length }} of
-          {{ planets.total }} planets
-        </p>
-        <b-button
-          variant="success"
-          @click="getPlanets"
-          :disabled="tableIsLoading || !planets.isMore"
-        >
-          Get 10 more planets
-        </b-button>
-      </div>
-    </div>
-    <b-table
-      class="mt-4 sw-table"
-      :items="planets.items"
-      :fields="fields"
-      :busy="tableIsLoading"
-      sticky-header="600px"
-      sort-by="name"
-      head-variant="dark"
-      striped
-      outlined
-    >
-      <template #table-busy>
-        <div class="text-center text-primary my-2">
-          <b-spinner class="align-middle"></b-spinner>
-          <strong>Loading...</strong>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 mt-5">
+          <h1 class="text-center">Star Wars Planets</h1>
         </div>
-      </template>
-      <template #cell(films)="row">
-        <b-button
-          v-if="row.item.films.length"
-          @click="getMoreInfo(row.item.films, row)"
-          >More Info</b-button
-        >
-      </template>
-      <template #cell(residents)="row">
-        <b-button
-          v-if="row.item.residents.length"
-          @click="getMoreInfo(row.item.residents, row)"
-          >More Info</b-button
-        >
-      </template>
-    </b-table>
-    <b-modal
-      ref="moreInfoModal"
-      id="more-info-modal"
-      :title="moreInfo.title"
-      size="lg"
-      hide-footer
-      centered
+        <div class="col-12">
+          <p>
+            Screen is showing: {{ planets.items.length }} of
+            {{ planets.total }} planets
+          </p>
+          <div class="d-flex justify-content-between flex-column flex-sm-row">
+            <b-button
+              variant="success"
+              @click="getPlanets"
+              :disabled="tableIsLoading || !planets.isMore"
+            >
+              Get 10 more planets
+            </b-button>
+            <b-button
+              class="mt-sm-0 mt-3"
+              variant="dark"
+              @click="fullWidth = !fullWidth"
+            >
+              {{ fullWidth ? "Container Width" : "Full Width" }}
+            </b-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="sw-planets"
+      :class="{ container: !fullWidth, 'container-fulid': fullWidth }"
     >
-      <SwLoading v-if="moreInfo.isLoading" />
-      <b-table stacked :items="moreInfo.content" :fields="moreInfo.fields" />
-    </b-modal>
+      <b-table
+        class="mt-4 sw-table"
+        :items="planets.items"
+        :fields="fields"
+        :busy="tableIsLoading"
+        sticky-header="600px"
+        sort-by="name"
+        head-variant="dark"
+        striped
+        outlined
+      >
+        <template #table-busy>
+          <div class="text-center text-primary my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Loading...</strong>
+          </div>
+        </template>
+        <template #cell(films)="row">
+          <b-button
+            v-if="row.item.films.length"
+            @click="getMoreInfo(row.item.films, row)"
+            >Show info</b-button
+          >
+        </template>
+        <template #cell(residents)="row">
+          <b-button
+            v-if="row.item.residents.length"
+            @click="getMoreInfo(row.item.residents, row)"
+            >Show info</b-button
+          >
+        </template>
+      </b-table>
+      <b-modal
+        ref="moreInfoModal"
+        id="more-info-modal"
+        :title="moreInfo.title"
+        size="lg"
+        hide-footer
+        centered
+      >
+        <SwLoading v-if="moreInfo.isLoading" />
+        <b-table stacked :items="moreInfo.content" :fields="moreInfo.fields" />
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -73,6 +87,7 @@ import SwLoading from "@/components/SwLoading.vue";
 export default {
   data() {
     return {
+      fullWidth: false,
       moreInfo: {
         isLoading: true,
         content: [],
