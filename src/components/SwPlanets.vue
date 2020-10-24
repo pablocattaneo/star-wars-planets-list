@@ -10,9 +10,7 @@
       responsive
     >
       <template #cell(films)="row">
-        <b-button
-          v-b-modal.filmModal
-          @click="getMoreInfo(row.item.films, row)"
+        <b-button v-b-modal.filmModal @click="getMoreInfo(row.item.films, row)"
           >Films</b-button
         >
       </template>
@@ -62,25 +60,23 @@ export default {
       this.planets = apiResponse.data.results;
     },
     getMoreInfo(arrayUrl, row) {
-      console.log("row", row.field.key);
-      let dataToShow
+      let dataToShow;
       switch (row.field.key) {
         case "films":
-          dataToShow = "title"
+          dataToShow = "title";
           break;
         case "residents":
-          dataToShow = "name"
+          dataToShow = "name";
           break;
         default:
           break;
       }
-      console.log("arrayUrl", arrayUrl);
       const arrayOfPromises = arrayUrl.map(async url => {
         const apiResponse = await axios.get(url);
         return apiResponse.data[dataToShow];
       });
       (async () => {
-        this.moreInfo  = await Promise.all(arrayOfPromises);
+        this.moreInfo = await Promise.all(arrayOfPromises);
       })();
     }
   },
