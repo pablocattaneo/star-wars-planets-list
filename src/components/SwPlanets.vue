@@ -11,7 +11,10 @@
           Screen is showing: {{ planets.items.length }} of
           {{ planets.total }} planets
         </p>
-        <b-button variant="success" @click="getPlanets"
+        <b-button
+          variant="success"
+          @click="getPlanets"
+          :disabled="!planets.isMore"
           >Get 10 more planets</b-button
         >
       </div>
@@ -82,7 +85,8 @@ export default {
       ],
       planets: {
         total: 0,
-        items: []
+        items: [],
+        isMore: null
       },
       pagination: 0
     };
@@ -94,6 +98,7 @@ export default {
         `https://swapi.dev/api/planets/?page=${this.pagination}`
       );
       this.planets.items.push(...apiResponse.data.results);
+      this.planets.isMore = apiResponse.data.next;
       this.planets.total = apiResponse.data.count;
     },
     resetMoreInfo() {
