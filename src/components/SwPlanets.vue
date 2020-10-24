@@ -52,7 +52,13 @@
         >
       </template>
     </b-table>
-    <b-modal ref="moreInfoModal" id="more-info-modal" :title="moreInfo.title">
+    <b-modal
+      ref="moreInfoModal"
+      id="more-info-modal"
+      :title="moreInfo.title"
+      hide-footer
+      centered
+    >
       <SwLoading v-if="moreInfo.isLoading" />
       <div v-for="(info, index) in moreInfo.content" :key="index">
         {{ info }}
