@@ -3,17 +3,23 @@
     <b-table
       :items="planets"
       :fields="fields"
+      responsive
       sort-by="name"
       head-variant="dark"
       striped
       outlined
-      responsive
     >
       <template #cell(films)="row">
-        <b-button v-if="row.item.films.length" @click="getMoreInfo(row.item.films, row)">More Info</b-button>
+        <b-button
+          v-if="row.item.films.length"
+          @click="getMoreInfo(row.item.films, row)"
+          >More Info</b-button
+        >
       </template>
       <template #cell(residents)="row">
-        <b-button v-if="row.item.residents.length" @click="getMoreInfo(row.item.residents, row)"
+        <b-button
+          v-if="row.item.residents.length"
+          @click="getMoreInfo(row.item.residents, row)"
           >More Info</b-button
         >
       </template>
@@ -70,12 +76,10 @@ export default {
       this.moreInfo.title = "";
       this.moreInfo.content = [];
     },
-    getMoreInfo(arrayUrl, row) {
+    async getMoreInfo(arrayUrl, row) {
       this.resetMoreInfo();
       this.$refs["moreInfoModal"].show();
-
       this.moreInfo.title = row.field.key;
-
       let dataToShow;
       switch (row.field.key) {
         case "films":
@@ -90,9 +94,7 @@ export default {
           const apiResponse = await axios.get(url);
           return apiResponse.data[dataToShow];
         });
-        (async () => {
-          this.moreInfo.content = await Promise.all(arrayOfPromises);
-        })();
+        this.moreInfo.content = await Promise.all(arrayOfPromises);
       } finally {
         this.moreInfo.isLoading = false;
       }
@@ -113,15 +115,15 @@ export default {
     bottom: 0
     left: 0
     background: white
+    z-index: 1
     .more-info-modal-is-loading
       position: absolute
       top: 0
       right: 0
       bottom: 0
       left: 0
-      background: white
       margin: auto
-      z-index: 1
+      z-index: 2
 ::v-deep
   #more-info-modal
     .modal-header
