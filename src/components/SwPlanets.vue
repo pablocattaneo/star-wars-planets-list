@@ -7,11 +7,17 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <p>Total: {{ planets.total }}</p>
-        <p>on screen: {{ planets.items.length }}</p>
+        <p>
+          Screen is showing: {{ planets.items.length }} of
+          {{ planets.total }} planets
+        </p>
+        <b-button variant="success" @click="getPlanets"
+          >Get 10 more planets</b-button
+        >
       </div>
     </div>
     <b-table
+      class="mt-4"
       :items="planets.items"
       :fields="fields"
       responsive
@@ -77,13 +83,17 @@ export default {
       planets: {
         total: 0,
         items: []
-      }
+      },
+      pagination: 0
     };
   },
   methods: {
     async getPlanets() {
-      const apiResponse = await axios.get("https://swapi.dev/api/planets/");
-      this.planets.items = apiResponse.data.results;
+      this.pagination += 1;
+      const apiResponse = await axios.get(
+        `https://swapi.dev/api/planets/?page=${this.pagination}`
+      );
+      this.planets.items.push(...apiResponse.data.results);
       this.planets.total = apiResponse.data.count;
     },
     resetMoreInfo() {
