@@ -10,21 +10,21 @@
       responsive
     >
       <template #cell(films)="row">
-        <b-button
-          v-b-modal.moreInfoModal
-          @click="getMoreInfo(row.item.films, row)"
-          >More Info</b-button
-        >
+        <b-button v-if="row.item.films.length" @click="getMoreInfo(row.item.films, row)">More Info</b-button>
       </template>
       <template #cell(residents)="row">
-        <b-button
-          v-b-modal.moreInfoModal
-          @click="getMoreInfo(row.item.residents, row)"
+        <b-button v-if="row.item.residents.length" @click="getMoreInfo(row.item.residents, row)"
           >More Info</b-button
         >
       </template>
     </b-table>
-    <b-modal id="moreInfoModal" :title="moreInfo.title">
+    <b-modal ref="moreInfoModal" id="more-info-modal" :title="moreInfo.title">
+      <div v-if="moreInfo.isLoading" class="more-info-modal-is-loading-wrapper">
+        <b-spinner
+          class="more-info-modal-is-loading"
+          label="Loading..."
+        ></b-spinner>
+      </div>
       <div v-for="(info, index) in moreInfo.content" :key="index">
         {{ info }}
       </div>
@@ -38,6 +38,7 @@ export default {
   data() {
     return {
       moreInfo: {
+        isLoading: true,
         content: [],
         title: ""
       },
@@ -64,7 +65,15 @@ export default {
       const apiResponse = await axios.get("https://swapi.dev/api/planets/");
       this.planets = apiResponse.data.results;
     },
+    resetMoreInfo() {
+      this.moreInfo.isLoading = true;
+      this.moreInfo.title = "";
+      this.moreInfo.content = [];
+    },
     getMoreInfo(arrayUrl, row) {
+      this.resetMoreInfo();
+      this.$refs["moreInfoModal"].show();
+
       this.moreInfo.title = row.field.key;
 
       let dataToShow;
@@ -76,13 +85,17 @@ export default {
           dataToShow = "name";
           break;
       }
-      const arrayOfPromises = arrayUrl.map(async url => {
-        const apiResponse = await axios.get(url);
-        return apiResponse.data[dataToShow];
-      });
-      (async () => {
-        this.moreInfo.content = await Promise.all(arrayOfPromises);
-      })();
+      try {
+        const arrayOfPromises = arrayUrl.map(async url => {
+          const apiResponse = await axios.get(url);
+          return apiResponse.data[dataToShow];
+        });
+        (async () => {
+          this.moreInfo.content = await Promise.all(arrayOfPromises);
+        })();
+      } finally {
+        this.moreInfo.isLoading = false;
+      }
     }
   },
   created() {
@@ -92,7 +105,27 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+#more-info-modal
+  .more-info-modal-is-loading-wrapper
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    background: white
+    .more-info-modal-is-loading
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      background: white
+      margin: auto
+      z-index: 1
 ::v-deep
-  .modal-header
-    text-transform: capitalize
+  #more-info-modal
+    .modal-header
+      text-transform: capitalize
+    .modal-body
+      min-height: 100px
 </style>
