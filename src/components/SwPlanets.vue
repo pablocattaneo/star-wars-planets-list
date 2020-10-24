@@ -1,7 +1,7 @@
 <template>
   <div id="sw-planets">
     <b-table
-      :items="planets"
+      :items="planets.items"
       :fields="fields"
       responsive
       sort-by="name"
@@ -63,13 +63,17 @@ export default {
         { key: "created", sortable: true },
         { key: "edited", sortable: true }
       ],
-      planets: []
+      planets: {
+        total: 0,
+        items: []
+      }
     };
   },
   methods: {
     async getPlanets() {
       const apiResponse = await axios.get("https://swapi.dev/api/planets/");
-      this.planets = apiResponse.data.results;
+      this.planets.items = apiResponse.data.results;
+      this.planets.total = apiResponse.data.count;
     },
     resetMoreInfo() {
       this.moreInfo.isLoading = true;
