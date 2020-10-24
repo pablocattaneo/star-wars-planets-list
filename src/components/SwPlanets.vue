@@ -12,13 +12,20 @@
       <template #cell(films)="row">
         <b-button
           v-b-modal.filmModal
-          @click="getFilmsWherePlanetAppear(row.item.films)"
+          @click="getMoreInfo(row.item.films, row)"
+          >Films</b-button
+        >
+      </template>
+      <template #cell(residents)="row">
+        <b-button
+          v-b-modal.filmModal
+          @click="getMoreInfo(row.item.residents, row)"
           >Films</b-button
         >
       </template>
     </b-table>
     <b-modal id="filmModal" title="BootstrapVue">
-      <div v-for="(film, index) in filmsTitles" :key="index">
+      <div v-for="(film, index) in moreInfo" :key="index">
         {{ film }}
       </div>
     </b-modal>
@@ -30,7 +37,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      filmsTitles: [],
+      moreInfo: [],
       fields: [
         { key: "name", sortable: true },
         { key: "climate", sortable: true },
@@ -54,14 +61,26 @@ export default {
       const apiResponse = await axios.get("https://swapi.dev/api/planets/");
       this.planets = apiResponse.data.results;
     },
-    getFilmsWherePlanetAppear(arrayUrl) {
+    getMoreInfo(arrayUrl, row) {
+      console.log("row", row.field.key);
+      let dataToShow
+      switch (row.field.key) {
+        case "films":
+          dataToShow = "title"
+          break;
+        case "residents":
+          dataToShow = "name"
+          break;
+        default:
+          break;
+      }
+      console.log("arrayUrl", arrayUrl);
       const arrayOfPromises = arrayUrl.map(async url => {
         const apiResponse = await axios.get(url);
-        return apiResponse.data.title;
+        return apiResponse.data[dataToShow];
       });
       (async () => {
-        const filmsTitles = await Promise.all(arrayOfPromises);
-        this.filmsTitles = filmsTitles;
+        this.moreInfo  = await Promise.all(arrayOfPromises);
       })();
     }
   },
