@@ -19,38 +19,36 @@
         >
       </div>
     </div>
-    <b-table
-      class="mt-4"
-      :items="planets.items"
-      :fields="fields"
-      responsive
-      sort-by="name"
-      head-variant="dark"
-      striped
-      outlined
-    >
-      <template #cell(films)="row">
-        <b-button
-          v-if="row.item.films.length"
-          @click="getMoreInfo(row.item.films, row)"
-          >More Info</b-button
-        >
-      </template>
-      <template #cell(residents)="row">
-        <b-button
-          v-if="row.item.residents.length"
-          @click="getMoreInfo(row.item.residents, row)"
-          >More Info</b-button
-        >
-      </template>
-    </b-table>
+    <div class="table-wrapper position-relative">
+      <b-table
+        class="mt-4"
+        :items="planets.items"
+        :fields="fields"
+        responsive
+        sort-by="name"
+        head-variant="dark"
+        striped
+        outlined
+      >
+        <template #cell(films)="row">
+          <b-button
+            v-if="row.item.films.length"
+            @click="getMoreInfo(row.item.films, row)"
+            >More Info</b-button
+          >
+        </template>
+        <template #cell(residents)="row">
+          <b-button
+            v-if="row.item.residents.length"
+            @click="getMoreInfo(row.item.residents, row)"
+            >More Info</b-button
+          >
+        </template>
+      </b-table>
+      <SwLoading v-if="tableIsLoading" />
+    </div>
     <b-modal ref="moreInfoModal" id="more-info-modal" :title="moreInfo.title">
-      <div v-if="moreInfo.isLoading" class="more-info-modal-is-loading-wrapper">
-        <b-spinner
-          class="more-info-modal-is-loading"
-          label="Loading..."
-        ></b-spinner>
-      </div>
+      <SwLoading v-if="moreInfo.isLoading" />
       <div v-for="(info, index) in moreInfo.content" :key="index">
         {{ info }}
       </div>
@@ -60,6 +58,8 @@
 
 <script>
 import axios from "axios";
+import SwLoading from "@/components/SwLoading.vue";
+
 export default {
   data() {
     return {
@@ -88,18 +88,27 @@ export default {
         items: [],
         isMore: null
       },
-      pagination: 0
+      pagination: 0,
+      tableIsLoading: true
     };
+  },
+  components: {
+    SwLoading
   },
   methods: {
     async getPlanets() {
-      this.pagination += 1;
-      const apiResponse = await axios.get(
-        `https://swapi.dev/api/planets/?page=${this.pagination}`
-      );
-      this.planets.items.push(...apiResponse.data.results);
-      this.planets.isMore = apiResponse.data.next;
-      this.planets.total = apiResponse.data.count;
+      try {
+        this.tableIsLoading = true;
+        this.pagination += 1;
+        const apiResponse = await axios.get(
+          `https://swapi.dev/api/planets/?page=${this.pagination}`
+        );
+        this.planets.items.push(...apiResponse.data.results);
+        this.planets.isMore = apiResponse.data.next;
+        this.planets.total = apiResponse.data.count;
+      } finally {
+        this.tableIsLoading = false;
+      }
     },
     resetMoreInfo() {
       this.moreInfo.isLoading = true;
@@ -137,23 +146,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-#more-info-modal
-  .more-info-modal-is-loading-wrapper
-    position: absolute
-    top: 0
-    right: 0
-    bottom: 0
-    left: 0
-    background: white
-    z-index: 1
-    .more-info-modal-is-loading
-      position: absolute
-      top: 0
-      right: 0
-      bottom: 0
-      left: 0
-      margin: auto
-      z-index: 2
 ::v-deep
   #more-info-modal
     .modal-header
