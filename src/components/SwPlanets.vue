@@ -55,7 +55,7 @@ export default {
       const apiResponse = await axios.get("https://swapi.dev/api/planets/");
       this.planets = apiResponse.data.results;
     },
-    async getFilmsWherePlanetAppear(arrayUrl) {
+    getFilmsWherePlanetAppear(arrayUrl) {
       const arrayOfPromises = arrayUrl.map(async url => {
         const apiResponse = await axios.get(url);
         return apiResponse.data.title;
