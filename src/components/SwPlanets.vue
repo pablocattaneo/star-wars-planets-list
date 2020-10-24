@@ -21,15 +21,15 @@
       </div>
     </div>
     <b-table
-      class="mt-4"
+      class="mt-4 sw-table"
       :items="planets.items"
       :fields="fields"
-      responsive
+      :busy="tableIsLoading"
+      sticky-header="600px"
       sort-by="name"
       head-variant="dark"
       striped
       outlined
-      :busy="tableIsLoading"
     >
       <template #table-busy>
         <div class="text-center text-primary my-2">
