@@ -44,8 +44,7 @@ export default {
         { key: "surface_water", sortable: true },
         { key: "terrain", sortable: true },
         { key: "created", sortable: true },
-        { key: "edited", sortable: true },
-        { key: "url", sortable: true }
+        { key: "edited", sortable: true }
       ],
       planets: []
     };
