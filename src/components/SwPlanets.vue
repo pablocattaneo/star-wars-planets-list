@@ -65,6 +65,8 @@ export default {
       this.planets = apiResponse.data.results;
     },
     getMoreInfo(arrayUrl, row) {
+      this.moreInfo.title = row.field.key
+      
       let dataToShow;
       switch (row.field.key) {
         case "films":
@@ -76,7 +78,6 @@ export default {
         default:
           break;
       }
-      this.moreInfo.title = row.field.key 
       const arrayOfPromises = arrayUrl.map(async url => {
         const apiResponse = await axios.get(url);
         return apiResponse.data[dataToShow];
