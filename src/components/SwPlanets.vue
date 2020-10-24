@@ -11,13 +11,13 @@
     >
       <template #cell(films)="row">
         <b-button
-          v-b-modal.modal-1
+          v-b-modal.filmModal
           @click="getFilmsWherePlanetAppear(row.item.films)"
           >Films</b-button
         >
       </template>
     </b-table>
-    <b-modal id="modal-1" title="BootstrapVue">
+    <b-modal id="filmModal" title="BootstrapVue">
       <div v-for="(film, index) in filmsTitles" :key="index">
         {{ film }}
       </div>
