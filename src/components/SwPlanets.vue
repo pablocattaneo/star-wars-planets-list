@@ -14,41 +14,44 @@
         <b-button
           variant="success"
           @click="getPlanets"
-          :disabled="!planets.isMore"
+          :disabled="tableIsLoading || !planets.isMore"
         >
           Get 10 more planets
-          <b-spinner v-if="tableIsLoading" small class="ml-2" />
         </b-button>
       </div>
     </div>
-    <div class="table-wrapper position-relative">
-      <b-table
-        class="mt-4"
-        :items="planets.items"
-        :fields="fields"
-        responsive
-        sort-by="name"
-        head-variant="dark"
-        striped
-        outlined
-      >
-        <template #cell(films)="row">
-          <b-button
-            v-if="row.item.films.length"
-            @click="getMoreInfo(row.item.films, row)"
-            >More Info</b-button
-          >
-        </template>
-        <template #cell(residents)="row">
-          <b-button
-            v-if="row.item.residents.length"
-            @click="getMoreInfo(row.item.residents, row)"
-            >More Info</b-button
-          >
-        </template>
-      </b-table>
-      <SwLoading v-if="tableIsLoading" />
-    </div>
+    <b-table
+      class="mt-4"
+      :items="planets.items"
+      :fields="fields"
+      responsive
+      sort-by="name"
+      head-variant="dark"
+      striped
+      outlined
+      :busy="tableIsLoading"
+    >
+      <template #table-busy>
+        <div class="text-center text-primary my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+        </div>
+      </template>
+      <template #cell(films)="row">
+        <b-button
+          v-if="row.item.films.length"
+          @click="getMoreInfo(row.item.films, row)"
+          >More Info</b-button
+        >
+      </template>
+      <template #cell(residents)="row">
+        <b-button
+          v-if="row.item.residents.length"
+          @click="getMoreInfo(row.item.residents, row)"
+          >More Info</b-button
+        >
+      </template>
+    </b-table>
     <b-modal ref="moreInfoModal" id="more-info-modal" :title="moreInfo.title">
       <SwLoading v-if="moreInfo.isLoading" />
       <div v-for="(info, index) in moreInfo.content" :key="index">
