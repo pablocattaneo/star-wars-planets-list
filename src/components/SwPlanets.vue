@@ -10,7 +10,9 @@
       responsive
     >
       <template #cell(films)="row">
-        <b-button v-b-modal.moreInfoModal @click="getMoreInfo(row.item.films, row)"
+        <b-button
+          v-b-modal.moreInfoModal
+          @click="getMoreInfo(row.item.films, row)"
           >More Info</b-button
         >
       </template>
@@ -23,9 +25,7 @@
       </template>
     </b-table>
     <b-modal id="moreInfoModal" :title="moreInfo.title">
-      <div 
-        v-for="(info, index) in moreInfo.content"
-        :key="index">
+      <div v-for="(info, index) in moreInfo.content" :key="index">
         {{ info }}
       </div>
     </b-modal>
@@ -39,7 +39,7 @@ export default {
     return {
       moreInfo: {
         content: [],
-        title: ''
+        title: ""
       },
       fields: [
         { key: "name", sortable: true },
@@ -65,8 +65,8 @@ export default {
       this.planets = apiResponse.data.results;
     },
     getMoreInfo(arrayUrl, row) {
-      this.moreInfo.title = row.field.key
-      
+      this.moreInfo.title = row.field.key;
+
       let dataToShow;
       switch (row.field.key) {
         case "films":
@@ -74,8 +74,6 @@ export default {
           break;
         case "residents":
           dataToShow = "name";
-          break;
-        default:
           break;
       }
       const arrayOfPromises = arrayUrl.map(async url => {
