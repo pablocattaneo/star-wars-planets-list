@@ -6,10 +6,6 @@
           <h1 class="text-center">Star Wars Planets</h1>
         </div>
         <div class="col-12">
-          <p>
-            Screen is showing: {{ planets.items.length }} of
-            {{ planets.total }} planets
-          </p>
           <div class="d-flex justify-content-between flex-column flex-sm-row">
             <b-button
               variant="success"
@@ -34,7 +30,7 @@
       :class="{ container: !fullWidth, 'container-fulid': fullWidth }"
     >
       <b-table
-        class="mt-4 sw-table"
+        class="mt-3 sw-table"
         :items="planets.items"
         :fields="fields"
         :busy="tableIsLoading"
@@ -65,6 +61,9 @@
           >
         </template>
       </b-table>
+      <p class="mt-3">
+        Showing <b>{{ planets.items.length }}</b> of {{ planets.total }} planets
+      </p>
       <b-modal
         ref="moreInfoModal"
         id="more-info-modal"
