@@ -10,21 +10,23 @@
       responsive
     >
       <template #cell(films)="row">
-        <b-button v-b-modal.filmModal @click="getMoreInfo(row.item.films, row)"
-          >Films</b-button
+        <b-button v-b-modal.moreInfoModal @click="getMoreInfo(row.item.films, row)"
+          >More Info</b-button
         >
       </template>
       <template #cell(residents)="row">
         <b-button
-          v-b-modal.filmModal
+          v-b-modal.moreInfoModal
           @click="getMoreInfo(row.item.residents, row)"
-          >Films</b-button
+          >More Info</b-button
         >
       </template>
     </b-table>
-    <b-modal id="filmModal" title="BootstrapVue">
-      <div v-for="(film, index) in moreInfo" :key="index">
-        {{ film }}
+    <b-modal id="moreInfoModal" :title="moreInfo.title">
+      <div 
+        v-for="(info, index) in moreInfo.content"
+        :key="index">
+        {{ info }}
       </div>
     </b-modal>
   </div>
@@ -35,7 +37,10 @@ import axios from "axios";
 export default {
   data() {
     return {
-      moreInfo: [],
+      moreInfo: {
+        content: [],
+        title: ''
+      },
       fields: [
         { key: "name", sortable: true },
         { key: "climate", sortable: true },
@@ -71,12 +76,13 @@ export default {
         default:
           break;
       }
+      this.moreInfo.title = row.field.key 
       const arrayOfPromises = arrayUrl.map(async url => {
         const apiResponse = await axios.get(url);
         return apiResponse.data[dataToShow];
       });
       (async () => {
-        this.moreInfo = await Promise.all(arrayOfPromises);
+        this.moreInfo.content = await Promise.all(arrayOfPromises);
       })();
     }
   },
@@ -86,4 +92,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="sass" scoped>
+::v-deep
+  .modal-header
+    text-transform: capitalize
+</style>
