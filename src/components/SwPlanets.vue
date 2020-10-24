@@ -1,5 +1,16 @@
 <template>
   <div id="sw-planets">
+    <div class="row">
+      <div class="col-12 mt-5">
+        <h1 class="text-center">Star Wars Planets</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <p>Total: {{ planets.total }}</p>
+        <p>on screen: {{ planets.items.length }}</p>
+      </div>
+    </div>
     <b-table
       :items="planets.items"
       :fields="fields"
