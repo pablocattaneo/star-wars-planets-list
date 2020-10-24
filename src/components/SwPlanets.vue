@@ -56,13 +56,12 @@
       ref="moreInfoModal"
       id="more-info-modal"
       :title="moreInfo.title"
+      size="lg"
       hide-footer
       centered
     >
       <SwLoading v-if="moreInfo.isLoading" />
-      <div v-for="(info, index) in moreInfo.content" :key="index">
-        {{ info }}
-      </div>
+      <b-table stacked :items="moreInfo.content" :fields="moreInfo.fields" />
     </b-modal>
   </div>
 </template>
@@ -139,19 +138,33 @@ export default {
       this.resetMoreInfo();
       this.$refs["moreInfoModal"].show();
       this.moreInfo.title = row.field.key;
-      let dataToShow;
       switch (row.field.key) {
         case "films":
-          dataToShow = "title";
+          this.moreInfo.fields = [
+            { key: "title" },
+            { key: "director" },
+            { key: "producer" },
+            { key: "opening_crawl" },
+            { key: "release_date" }
+          ];
           break;
         case "residents":
-          dataToShow = "name";
+          this.moreInfo.fields = [
+            { key: "name" },
+            { key: "birth_year" },
+            { key: "eye_color" },
+            { key: "gender" },
+            { key: "hair_color" },
+            { key: "height" },
+            { key: "skin_color" },
+            { key: "mass" }
+          ];
           break;
       }
       try {
         const arrayOfPromises = arrayUrl.map(async url => {
           const apiResponse = await axios.get(url);
-          return apiResponse.data[dataToShow];
+          return apiResponse.data;
         });
         this.moreInfo.content = await Promise.all(arrayOfPromises);
       } finally {
