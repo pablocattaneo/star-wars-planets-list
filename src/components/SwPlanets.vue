@@ -194,6 +194,7 @@ export default {
           variant: "danger",
           solid: true
         });
+        this.$refs["moreInfoModal"].hide();
       } finally {
         this.moreInfo.isLoading = false;
       }
