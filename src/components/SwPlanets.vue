@@ -45,7 +45,7 @@
         :items="planets.items"
         :fields="fields"
         :busy="tableIsLoading"
-        sticky-header="600px"
+        sticky-header="calc(100vh - 210px)"
         sort-by="name"
         head-variant="dark"
         striped
