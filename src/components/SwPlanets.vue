@@ -186,6 +186,14 @@ export default {
           return apiResponse.data;
         });
         this.moreInfo.content = await Promise.all(arrayOfPromises);
+      } catch (error) {
+        const errorMessage = error?.message || "Something go wrong";
+        this.$bvToast.toast(errorMessage, {
+          title: "Error",
+          toaster: "b-toaster-bottom-center",
+          variant: "danger",
+          solid: true
+        });
       } finally {
         this.moreInfo.isLoading = false;
       }
