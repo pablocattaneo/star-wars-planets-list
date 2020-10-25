@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-12 mt-5">
+        <div class="col-12 mt-2 mt-sm-1">
           <h1 class="text-center">Star Wars Planets</h1>
         </div>
         <div class="col-12">
@@ -20,7 +20,7 @@
               Get 10 more planets
             </b-button>
             <b-button
-              class="mt-sm-0 mt-3"
+              class="d-none d-sm-block"
               variant="dark"
               @click="fullWidth = !fullWidth"
             >
