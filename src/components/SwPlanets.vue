@@ -28,6 +28,12 @@
             </b-button>
           </div>
         </div>
+        <div class="col-12">
+          <p class="mt-3">
+            Showing <b>{{ planets.items.length }}</b> of
+            {{ planets.total }} planets
+          </p>
+        </div>
       </div>
     </div>
     <div
@@ -35,7 +41,7 @@
       :class="{ container: !fullWidth, 'container-fulid': fullWidth }"
     >
       <b-table
-        class="mt-3 sw-table"
+        class="sw-table"
         :items="planets.items"
         :fields="fields"
         :busy="tableIsLoading"
@@ -66,9 +72,6 @@
           >
         </template>
       </b-table>
-      <p class="mt-3">
-        Showing <b>{{ planets.items.length }}</b> of {{ planets.total }} planets
-      </p>
       <b-modal
         ref="moreInfoModal"
         id="more-info-modal"
